@@ -1,0 +1,36 @@
+# -----------------------------
+# FRONTEND (Expo React Native)
+# -----------------------------
+
+# Dependencies
+/frontend/node_modules/
+
+# Expo specific
+/frontend/.expo/
+frontend/dist/
+frontend/web-build/
+frontend/expo-env.d.ts
+
+# Native (Generated during prebuild)
+frontend/ios/
+frontend/android/
+
+# Metro Cache
+frontend/.metro-health-check*
+
+# Debug logs
+frontend/npm-debug.*
+frontend/yarn-debug.*
+frontend/yarn-error.*
+
+# TypeScript
+frontend/*.tsbuildinfo
+
+# Environment files
+frontend/.env
+frontend/.env*.local
+
+# -----------------------------
+# BACKEND (Node.js or Express)
+# -----------------------------
+
