@@ -1,64 +1,100 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart } from "../../redux/slices/CartSlices";
+import Header from "../../components/Header";
 
-const CustomerCart = ({ route, navigation }) => {
-  const { item, quantity, timeSlot, addition } = route.params;
+const CustomerCart = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
 
-  const totalPrice = Number(item.price) * quantity;
+  // ✅ Empty cart
+  if (cartItems.length === 0) {
+    return (
+      <SafeAreaView style={styles.emptyContainer}>
+        <Text style={styles.emptyIcon}>🛒</Text>
+        <Text style={styles.emptyTitle}>Your cart is empty</Text>
+        <Text style={styles.emptyText}>Start adding delicious items!</Text>
+      </SafeAreaView>
+    );
+  }
+
+  // ✅ Total price from merged items
+  const totalPrice = cartItems.reduce((sum, cart) => {
+    return sum + Number(cart.item.price) * cart.quantity;
+  }, 0);
 
   return (
     <SafeAreaView style={styles.container}>
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <Image source={require("../../assets/logo.png")} style={styles.logo} />
-        <Text style={styles.headerTitle}>Cart</Text>
-        <TouchableOpacity>
-          <Text style={styles.bell}>🔔</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Cart Item */}
-      <View style={styles.cartItem}>
-        <Image source={item.image} style={styles.foodImage} />
-
-        <View style={{ flex: 1, marginLeft: 10 }}>
-          <Text style={styles.foodTitle}>{item.title}</Text>
-          <Text style={styles.foodPrice}>₹ {item.price}/-</Text>
-
-          <Text style={styles.metaText}>Qty: {quantity}</Text>
-          {addition ? <Text style={styles.metaText}>Add: {addition}</Text> : null}
-          {timeSlot ? <Text style={styles.metaText}>Time: {timeSlot}</Text> : null}
-        </View>
-
-        <TouchableOpacity style={styles.removeBtn}>
-          <Text style={{ color: "white", fontWeight: "700" }}>✕</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Order Summary */}
-      <View style={styles.summaryBox}>
-        <Text style={styles.summaryTitle}>Order Summary</Text>
-
-        <View style={styles.rowSpace}>
-          <Text>Order</Text>
-          <Text>₹ {item.price} × {quantity}</Text>
-        </View>
-
-        <View style={styles.rowSpace}>
-          <Text style={styles.totalText}>Total</Text>
-          <Text style={styles.totalText}>₹ {totalPrice}/-</Text>
-        </View>
-      </View>
-
-      {/* Checkout Button */}
-      <TouchableOpacity
-        style={styles.checkoutBtn}
-        onPress={() => navigation.navigate("Checkout")}  // create later
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
       >
-        <Text style={styles.checkoutText}>Checkout</Text>
-      </TouchableOpacity>
+        <Header title="Cart" />
+
+        {/* Cart items */}
+        {cartItems.map((cart, index) => (
+          <View key={index} style={styles.cartItem}>
+            <Image source={cart.item.image} style={styles.foodImage} />
+
+            <View style={{ flex: 1, marginLeft: 10 }}>
+              <Text style={styles.foodTitle}>{cart.item.title}</Text>
+              <Text style={styles.foodPrice}>
+                ₹ {cart.item.price * cart.quantity}/-
+              </Text>
+
+              <Text style={styles.metaText}>Qty: {cart.quantity}</Text>
+              {cart.addition && (
+                <Text style={styles.metaText}>Add: {cart.addition}</Text>
+              )}
+              {cart.timeSlot && (
+                <Text style={styles.metaText}>Time: {cart.timeSlot}</Text>
+              )}
+            </View>
+
+            <TouchableOpacity
+              style={styles.removeBtn}
+              onPress={() => dispatch(removeFromCart(index))}
+            >
+              <Text style={{ color: "white", fontWeight: "700" }}>✕</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+
+        {/* Order Summary */}
+        <View style={styles.summaryBox}>
+          <Text style={styles.summaryTitle}>Order Summary</Text>
+
+          <View className="rowSpace" style={styles.rowSpace}>
+            <Text>Items Total</Text>
+            <Text>₹ {totalPrice}</Text>
+          </View>
+
+          <View style={styles.rowSpace}>
+            <Text style={styles.totalText}>Grand Total</Text>
+            <Text style={styles.totalText}>₹ {totalPrice}/-</Text>
+          </View>
+        </View>
+
+        {/* Checkout Button */}
+        <TouchableOpacity
+          style={styles.checkoutBtn}
+          onPress={() => navigation.navigate("Checkout")}
+        >
+          <Text style={styles.checkoutText}>Checkout</Text>
+        </TouchableOpacity>
+
+        {/* Extra bottom padding so last button isn't glued to bottom */}
+        <View style={{ height: 40 }} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -69,7 +105,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+
+  scrollContent: {
     paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
+
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+  emptyIcon: {
+    fontSize: 80,
+    marginBottom: 20,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 10,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: "#777",
   },
 
   header: {

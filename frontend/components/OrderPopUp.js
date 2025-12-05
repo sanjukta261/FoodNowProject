@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/slices/CartSlices";
+
 const OrderPopup = ({
   visible,
   onClose,
@@ -38,6 +41,22 @@ const OrderPopup = ({
       slideAnim.setValue(0);
     }
   }, [visible]);
+
+  const dispatch = useDispatch();
+
+  const handleContinue = () => {
+    dispatch(
+      addToCart({
+        item,
+        quantity,
+        timeSlot,
+        addition,
+      })
+    );
+
+    onClose();
+    onContinue();
+  };
 
   const translateY = slideAnim.interpolate({
     inputRange: [0, 1],
@@ -75,10 +94,7 @@ const OrderPopup = ({
           style={[
             styles.sheet,
             {
-              transform: [
-                { translateY },
-                { translateY: pan.y },
-              ],
+              transform: [{ translateY }, { translateY: pan.y }],
             },
           ]}
           {...panResponder.panHandlers}
@@ -136,7 +152,9 @@ const OrderPopup = ({
 
           {/* Quantity */}
           <View style={styles.qtyRow}>
-            <TouchableOpacity onPress={() => quantity > 1 && setQuantity(quantity - 1)}>
+            <TouchableOpacity
+              onPress={() => quantity > 1 && setQuantity(quantity - 1)}
+            >
               <Text style={styles.qtyBtn}>-</Text>
             </TouchableOpacity>
             <Text style={styles.qtyValue}>{quantity}</Text>
@@ -146,7 +164,7 @@ const OrderPopup = ({
           </View>
 
           {/* Continue */}
-          <TouchableOpacity style={styles.continueBtn} onPress={onContinue}>
+          <TouchableOpacity style={styles.continueBtn} onPress={handleContinue}>
             <Text style={styles.continueText}>Continue →</Text>
           </TouchableOpacity>
         </Animated.View>

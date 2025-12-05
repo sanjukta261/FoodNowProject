@@ -11,6 +11,9 @@ import OrderPopup from "../../components/OrderPopUp";
 import vegthali from "../../assets/veg_thali.png";
 import chai from "../../assets/chai.png";
 
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/CartSlices";
+
 const MENU_ITEMS = [
   { id: "1", title: "Thali", price: "60", image: vegthali, category: "Thali" },
   { id: "2", title: "Chai", price: "12", image: chai, category: "Roll" },
@@ -24,7 +27,7 @@ const MENU_ITEMS = [
   { id: "4", title: "Chai", price: "12", image: chai, category: "Cake" },
 ];
 
-const CustomerMenu = () => {
+const CustomerMenu = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
@@ -32,6 +35,8 @@ const CustomerMenu = () => {
   const [quantity, setQuantity] = useState(1);
   const [timeSlot, setTimeSlot] = useState("");
   const [addition, setAddition] = useState("");
+
+  const dispatch = useDispatch();
 
   const filteredItems = MENU_ITEMS.filter(
     (item) =>
@@ -72,6 +77,9 @@ const CustomerMenu = () => {
                 image={item.image}
                 onPress={() => {
                   setSelectedItem(item);
+                  setQuantity(1);
+                  setTimeSlot("");
+                  setAddition("");
                   setShowPopup(true);
                 }}
               />
@@ -91,13 +99,17 @@ const CustomerMenu = () => {
         addition={addition}
         setAddition={setAddition}
         onContinue={() => {
+          dispatch(
+            addToCart({
+              item: selectedItem,
+              quantity,
+              timeSlot,
+              addition,
+            })
+          );
+
           setShowPopup(false);
-          navigation.navigate("CustomerCart", {
-            item: selectedItem,
-            quantity,
-            timeSlot,
-            addition,
-          });
+          navigation.navigate("Cart");
         }}
       />
     </SafeAreaView>

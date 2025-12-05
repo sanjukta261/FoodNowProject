@@ -1,7 +1,13 @@
 import React from 'react';
 import RootNavigation from '../frontend/navigation/index';
 
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+
 export default function App() {
-  
-  return <RootNavigation />
+  return (
+    <Provider store={store}>
+      <RootNavigation />
+    </Provider>
+  );
 }
