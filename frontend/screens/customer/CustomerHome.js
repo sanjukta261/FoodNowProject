@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SpecialCard from "../../components/SpecialCard";
 import BlockCanteenPicker from "../../components/BlockCanteenPicker";
 import BestSellerList from "../../components/BestSellerList";
+import Header from '../../components/Header'
 
 
 const CustomerHome = () => {
@@ -11,7 +12,7 @@ const CustomerHome = () => {
     <SafeAreaView style={{flex: 1}}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Screen Header */}
-        <Text style={styles.header}>Home</Text>
+        <Header title="Home" />
 
         {/* Special Offer Card */}
         <SpecialCard />

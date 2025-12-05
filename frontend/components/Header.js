@@ -1,37 +1,57 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import {COLORS} from '../constants/Theme';
- 
-const Header = ({ title, onPress }) => {
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../constants/Theme";
+import logo from '../assets/logo.png'
+
+// Pass props: title, onNotificationPress, logoSource
+const Header = ({ title }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress} style={styles.iconButton}>
-        <AntDesign name="arrow-left" size={24} color={COLORS.secondary} />
-      </TouchableOpacity>
+
+      {/* Logo */}
+      <Image
+        source={logo}
+        style={styles.logo}
+      />
+
+      {/* Page Title */}
       <Text style={styles.title}>{title}</Text>
-      <View style={{ width: 40 }} /> 
+
+      {/* Notification Icon */}
+      <TouchableOpacity style={styles.iconButton}>
+        <Ionicons name="notifications-outline" size={26} color={COLORS.secondary} />
+      </TouchableOpacity>
     </View>
   );
 };
 
+export default Header;
+
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-    backgroundColor: 'white',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    backgroundColor: "#FFFFFF",
   },
+
+  logo: {
+    width: 35,
+    height: 35,
+    resizeMode: "contain",
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: COLORS.secondary,
+  },
+
   iconButton: {
     padding: 8,
     borderRadius: 50,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: COLORS.secondary,
-  },
 });
-
-export default Header;
