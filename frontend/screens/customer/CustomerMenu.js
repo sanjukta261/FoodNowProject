@@ -6,30 +6,42 @@ import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import FilterChips from "../../components/FilterChips";
 import BestSellerCard from "../../components/BestSellerCard";
+import OrderPopup from "../../components/OrderPopUp";
 
-import vegthali from '../../assets/veg_thali.png';
-import chai from '../../assets/chai.png';
+import vegthali from "../../assets/veg_thali.png";
+import chai from "../../assets/chai.png";
 
 const MENU_ITEMS = [
   { id: "1", title: "Thali", price: "60", image: vegthali, category: "Thali" },
   { id: "2", title: "Chai", price: "12", image: chai, category: "Roll" },
-  { id: "3", title: "Veg Thali", price: "60", image: vegthali, category: "Thali" },
+  {
+    id: "3",
+    title: "Veg Thali",
+    price: "60",
+    image: vegthali,
+    category: "Thali",
+  },
   { id: "4", title: "Chai", price: "12", image: chai, category: "Cake" },
 ];
 
 const CustomerMenu = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [timeSlot, setTimeSlot] = useState("");
+  const [addition, setAddition] = useState("");
 
-  const filteredItems = MENU_ITEMS.filter(item =>
-    (filter === "All" || item.category === filter) &&
-    item.title.toLowerCase().includes(search.toLowerCase())
+  const filteredItems = MENU_ITEMS.filter(
+    (item) =>
+      (filter === "All" || item.category === filter) &&
+      item.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        
         {/* Header */}
         <Header
           title="Menu"
@@ -39,10 +51,7 @@ const CustomerMenu = () => {
 
         {/* Search bar */}
         <View style={styles.searchWrapper}>
-          <SearchBar
-            placeholder="Search your food"
-            onChangeText={setSearch}
-          />
+          <SearchBar placeholder="Search your food" onChangeText={setSearch} />
         </View>
 
         {/* Filter Chips */}
@@ -61,13 +70,36 @@ const CustomerMenu = () => {
                 title={item.title}
                 price={item.price}
                 image={item.image}
+                onPress={() => {
+                  setSelectedItem(item);
+                  setShowPopup(true);
+                }}
               />
             </View>
           )}
         />
-
         <View style={{ height: 100 }} />
       </ScrollView>
+      <OrderPopup
+        visible={showPopup}
+        onClose={() => setShowPopup(false)}
+        item={selectedItem}
+        quantity={quantity}
+        setQuantity={setQuantity}
+        timeSlot={timeSlot}
+        setTimeSlot={setTimeSlot}
+        addition={addition}
+        setAddition={setAddition}
+        onContinue={() => {
+          setShowPopup(false);
+          navigation.navigate("CustomerCart", {
+            item: selectedItem,
+            quantity,
+            timeSlot,
+            addition,
+          });
+        }}
+      />
     </SafeAreaView>
   );
 };

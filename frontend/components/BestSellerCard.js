@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-const BestSellerCard = ({ title, price, image }) => {
+const BestSellerCard = ({ title, price, image, onPress }) => {
   return (
     <View style={styles.card}>
 
@@ -14,7 +14,7 @@ const BestSellerCard = ({ title, price, image }) => {
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.price}>₹ {price}</Text>
 
-      <TouchableOpacity style={styles.orderBtn}>
+      <TouchableOpacity style={styles.orderBtn} onPress={onPress}>
         <Text style={styles.orderText}>Order Now</Text>
       </TouchableOpacity>
 
