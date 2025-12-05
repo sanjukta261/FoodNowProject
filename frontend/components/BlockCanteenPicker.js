@@ -1,17 +1,39 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const BlockCanteenPicker = () => {
+  const [block, setBlock] = useState("");
+  const [canteen, setCanteen] = useState("");
+
   return (
     <View style={styles.container}>
-      
-      <TouchableOpacity style={styles.dropdown}>
-        <Text>Select Your Block</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity style={styles.dropdown}>
-        <Text>Select Your Canteen</Text>
-      </TouchableOpacity>
+      {/* Block Picker */}
+      <View style={styles.pickerBox}>
+        <Picker
+          selectedValue={block}
+          onValueChange={(value) => setBlock(value)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Select Block" value="" />
+          <Picker.Item label="A Block" value="A" />
+          <Picker.Item label="B Block" value="B" />
+        </Picker>
+      </View>
+
+      {/* Canteen Picker */}
+      <View style={styles.pickerBox}>
+        <Picker
+          selectedValue={canteen}
+          onValueChange={(value) => setCanteen(value)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Select Canteen" value="" />
+          <Picker.Item label="Jironi" value="jironi" />
+          <Picker.Item label="Dream Cafe" value="dreamCafe" />
+        </Picker>
+      </View>
 
     </View>
   );
@@ -25,13 +47,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 15,
   },
-
-  dropdown: {
+  pickerBox: {
     width: "48%",
     borderWidth: 1,
     borderColor: "#ccc",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
     borderRadius: 10,
+    overflow: "hidden",
+  },
+  picker: {
+    height: 55,
   },
 });

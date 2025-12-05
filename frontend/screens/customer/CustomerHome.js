@@ -1,29 +1,32 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SpecialCard from "../../components/SpecialCard";
 import BlockCanteenPicker from "../../components/BlockCanteenPicker";
 import BestSellerList from "../../components/BestSellerList";
 
+
 const CustomerHome = () => {
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      
-      {/* Screen Header */}
-      <Text style={styles.header}>Home</Text>
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        {/* Screen Header */}
+        <Text style={styles.header}>Home</Text>
 
-      {/* Special Offer Card */}
-      <SpecialCard />
+        {/* Special Offer Card */}
+        <SpecialCard />
 
-      {/* Block + Canteen Selection */}
-      <BlockCanteenPicker />
+        {/* Block + Canteen Selection */}
+        <BlockCanteenPicker />
 
-      {/* Best Seller Section */}
-      <Text style={styles.sectionTitle}>Our Best Seller</Text>
-      <BestSellerList />
+        {/* Best Seller Section */}
+        <Text style={styles.sectionTitle}>Our Best Seller</Text>
+        <BestSellerList />
 
-      {/* Add bottom spacing */}
-      <View style={{ height: 100 }} />
-    </ScrollView>
+        {/* Add bottom spacing */}
+        <View style={{ height: 100 }} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

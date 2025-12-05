@@ -1,20 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import sweets from '../assets/gulab_jamun.png'
+import sweets from "../assets/gulab_jamun.png";
 
 const SpecialCard = () => {
   return (
     <View style={styles.card}>
       
-      {/* Placeholder Food Image */}
-      <Image
-        source={sweets}
-        style={styles.foodImage}
-      />
-
-      {/* Texts */}
-      <Text style={styles.title}>Gulab jamun</Text>
+      {/* Top Subtitle */}
       <Text style={styles.subtitle}>See What’s Special For You TODAY!</Text>
+
+      {/* Row: Text Left, Image Right */}
+      <View style={styles.row}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>Gulab jamun 😋</Text>
+        </View>
+
+        <Image source={sweets} style={styles.foodImage} />
+      </View>
 
       {/* Button */}
       <TouchableOpacity style={styles.button}>
@@ -35,23 +37,29 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 
-  foodImage: {
-    width: 120,
-    height: 120,
-    alignSelf: "flex-end",
-    resizeMode: "contain",
+  subtitle: {
+    color: "#f9cfcf",
+    fontSize: 14,
+    marginBottom: 10,
+  },
+
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   title: {
     color: "#fff",
     fontSize: 22,
     fontWeight: "700",
+    maxWidth: "80%", // Prevent text overflow
   },
 
-  subtitle: {
-    color: "#f9cfcf",
-    fontSize: 14,
-    marginBottom: 10,
+  foodImage: {
+    width: 110,
+    height: 110,
+    resizeMode: "contain",
   },
 
   button: {
@@ -60,7 +68,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 20,
-    marginTop: 10,
+    marginTop: 20,
   },
 
   buttonText: {

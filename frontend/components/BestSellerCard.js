@@ -1,14 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import veg_thali from '../assets/veg_thali.png'
 
-const BestSellerCard = ({ title, price }) => {
+const BestSellerCard = ({ title, price, image }) => {
   return (
     <View style={styles.card}>
-      
-      {/* Placeholder Image */}
+
+      {/* Dynamic Product Image */}
       <Image
-        source={veg_thali}
+        source={image}     // ← now dynamic
         style={styles.image}
       />
 
