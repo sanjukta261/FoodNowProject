@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Home from "../../screens/customer/CustomerHome";
 import Menu from "../../screens/customer/CustomerMenu";
 import Cart from "../../screens/customer/CustomerCart";
-import Profile from "../../screens/customer/CustomerProfile";
+import Order from "../../screens/customer/OrderQR";
 import { COLORS, SIZE } from "../../constants/Theme";
 
 const BottomTab = createBottomTabNavigator();
@@ -78,11 +78,11 @@ const BottomTabNavigation = () => {
         }}
       />
       <BottomTab.Screen
-        name="Profile"
-        component={Profile}
+        name="QR"
+        component={Order}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} iconName="person" />
+            <TabIcon focused={focused} iconName="qr-code" />
           ),
         }}
       />

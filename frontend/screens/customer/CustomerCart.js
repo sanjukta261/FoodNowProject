@@ -87,7 +87,7 @@ const CustomerCart = ({ navigation }) => {
         {/* Checkout Button */}
         <TouchableOpacity
           style={styles.checkoutBtn}
-          onPress={() => navigation.navigate("Checkout")}
+          onPress={() => navigation.navigate("QR")}
         >
           <Text style={styles.checkoutText}>Checkout</Text>
         </TouchableOpacity>
