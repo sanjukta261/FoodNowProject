@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS, SIZE } from '@constants/Theme';
+import { COLORS, SIZE } from '../constants/Theme';
 
 const IconText = ({
   icon, // React element (Icon component)

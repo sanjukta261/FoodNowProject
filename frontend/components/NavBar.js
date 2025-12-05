@@ -8,10 +8,9 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import profile from "@assets/profile.jpeg";
-import { COLORS, SIZE } from "@constants/Theme";
-import ProfilePicture from "@components/ProfilePicture";
-import SearchBar from "@components/SearchBar";
+import { COLORS, SIZE } from "../constants/Theme";
+import ProfilePicture from "./ProfilePicture";
+import SearchBar from "./SearchBar";
 import { useNavigation } from "@react-navigation/native";
 
 const NavBar = () => {
