@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import {COLORS} from '@constants/Theme';
+import {COLORS} from '../constants/Theme';
  
 const Header = ({ title, onPress }) => {
   return (

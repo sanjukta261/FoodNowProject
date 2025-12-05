@@ -6,16 +6,15 @@ import AdminMainStack from '../admin/AdminMainStack';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigation = () => {
+const AdminDrawerNav = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <AdminSideProfile {...props} />}
       screenOptions={{ headerShown: false }}
     >
       <Drawer.Screen name="HomeScreen" component={AdminMainStack} />
-      <Drawer.Screen name="FullProfile" component={FullProfile} />
     </Drawer.Navigator>
   );
 };
 
-export default DrawerNavigation;
+export default AdminDrawerNav;

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { COLORS, SIZE } from "@constants/Theme";
+import { COLORS, SIZE } from "../constants/Theme";
 
 const SearchBar = ({ placeholder = "Search", onChangeText }) => {
   return (

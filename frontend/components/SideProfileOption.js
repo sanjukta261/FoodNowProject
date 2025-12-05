@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import {COLORS,SIZE} from '@constants/Theme';
+import {COLORS,SIZE} from '../constants/Theme';
 
 const SideProfileOption = ({icon, label, onPress}) => {
   return (

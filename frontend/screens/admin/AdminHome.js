@@ -1,6 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { ShoppingCart, DollarSign, TrendingUp, Package, Users, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import NavBar from '../../components/NavBar';
+
+const { width } = Dimensions.get('window');
 
 export default function FoodNowDashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -11,7 +22,7 @@ export default function FoodNowDashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Sample data - in real app, this would come from API
+  // Sample data
   const stats = {
     totalOrders: 248,
     todaySales: 3240,
@@ -22,17 +33,6 @@ export default function FoodNowDashboard() {
     topProduct: 'Chicken Biryani',
     lowStockItems: 3
   };
-
-  const salesData = [
-    { time: '9 AM', sales: 450, orders: 35 },
-    { time: '10 AM', sales: 680, orders: 52 },
-    { time: '11 AM', sales: 920, orders: 71 },
-    { time: '12 PM', sales: 1450, orders: 112 },
-    { time: '1 PM', sales: 1280, orders: 98 },
-    { time: '2 PM', sales: 850, orders: 65 },
-    { time: '3 PM', sales: 520, orders: 40 },
-    { time: '4 PM', sales: 380, orders: 29 }
-  ];
 
   const topProducts = [
     { name: 'Chicken Biryani', sales: 45, revenue: 675 },
@@ -49,221 +49,589 @@ export default function FoodNowDashboard() {
     { id: '#ORD-1245', customer: 'Emma Wilson', items: 1, amount: 15, status: 'preparing', time: '12m ago' }
   ];
 
-  const getStatusColor = (status) => {
+  const getStatusStyle = (status) => {
     switch(status) {
-      case 'preparing': return 'bg-yellow-100 text-yellow-800';
-      case 'ready': return 'bg-blue-100 text-blue-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'preparing': return styles.statusPreparing;
+      case 'ready': return styles.statusReady;
+      case 'completed': return styles.statusCompleted;
+      default: return styles.statusDefault;
+    }
+  };
+
+  const getRankColor = (index) => {
+    switch(index) {
+      case 0: return '#EAB308';
+      case 1: return '#9CA3AF';
+      case 2: return '#EA580C';
+      default: return '#A855F7';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
-      {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
-                <ShoppingCart className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">FoodNow</h1>
-                <p className="text-purple-200 text-sm">Canteen Management</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-white font-semibold">{currentTime.toLocaleTimeString()}</p>
-                <p className="text-purple-200 text-sm">{currentTime.toLocaleDateString()}</p>
-              </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">A</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <SafeAreaView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header */}
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <ShoppingCart className="w-6 h-6 text-white" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-white/80" />
-            </div>
-            <p className="text-white/90 text-sm font-medium">Total Orders</p>
-            <p className="text-white text-3xl font-bold mt-1">{stats.totalOrders}</p>
-            <p className="text-white/70 text-xs mt-2">+12% from yesterday</p>
-          </div>
+        <View style={styles.statsContainer}>
+          <View style={[styles.statCard, styles.statCardOrange]}>
+            <View style={styles.statHeader}>
+              <View style={styles.statIcon}>
+                <Text style={styles.statIconText}>🛒</Text>
+              </View>
+              <Text style={styles.statTrend}>📈</Text>
+            </View>
+            <Text style={styles.statLabel}>Total Orders</Text>
+            <Text style={styles.statValue}>{stats.totalOrders}</Text>
+            <Text style={styles.statChange}>+12% from yesterday</Text>
+          </View>
 
-          <div className="bg-gradient-to-br from-green-400 to-green-500 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-white" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-white/80" />
-            </div>
-            <p className="text-white/90 text-sm font-medium">Today's Sales</p>
-            <p className="text-white text-3xl font-bold mt-1">₹{stats.todaySales}</p>
-            <p className="text-white/70 text-xs mt-2">Avg: ₹{stats.avgOrderValue}/order</p>
-          </div>
+          <View style={[styles.statCard, styles.statCardGreen]}>
+            <View style={styles.statHeader}>
+              <View style={styles.statIcon}>
+                <Text style={styles.statIconText}>💰</Text>
+              </View>
+              <Text style={styles.statTrend}>📈</Text>
+            </View>
+            <Text style={styles.statLabel}>Today's Sales</Text>
+            <Text style={styles.statValue}>₹{stats.todaySales}</Text>
+            <Text style={styles.statChange}>Avg: ₹{stats.avgOrderValue}/order</Text>
+          </View>
 
-          <div className="bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <Clock className="w-6 h-6 text-white" />
-              </div>
-              <AlertCircle className="w-5 h-5 text-white/80" />
-            </div>
-            <p className="text-white/90 text-sm font-medium">Active Orders</p>
-            <p className="text-white text-3xl font-bold mt-1">{stats.activeOrders}</p>
-            <p className="text-white/70 text-xs mt-2">Need attention</p>
-          </div>
+          <View style={[styles.statCard, styles.statCardBlue]}>
+            <View style={styles.statHeader}>
+              <View style={styles.statIcon}>
+                <Text style={styles.statIconText}>⏰</Text>
+              </View>
+              <Text style={styles.statTrend}>⚠️</Text>
+            </View>
+            <Text style={styles.statLabel}>Active Orders</Text>
+            <Text style={styles.statValue}>{stats.activeOrders}</Text>
+            <Text style={styles.statChange}>Need attention</Text>
+          </View>
 
-          <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-white/80" />
-            </div>
-            <p className="text-white/90 text-sm font-medium">Completed</p>
-            <p className="text-white text-3xl font-bold mt-1">{stats.completedToday}</p>
-            <p className="text-white/70 text-xs mt-2">Peak: {stats.peakHour}</p>
-          </div>
-        </div>
+          <View style={[styles.statCard, styles.statCardPurple]}>
+            <View style={styles.statHeader}>
+              <View style={styles.statIcon}>
+                <Text style={styles.statIconText}>✅</Text>
+              </View>
+              <Text style={styles.statTrend}>📈</Text>
+            </View>
+            <Text style={styles.statLabel}>Completed</Text>
+            <Text style={styles.statValue}>{stats.completedToday}</Text>
+            <Text style={styles.statChange}>Peak: {stats.peakHour}</Text>
+          </View>
+        </View>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Sales Overview */}
-          <div className="lg:col-span-2 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-xl">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-white">Sales Overview</h2>
-              <div className="flex gap-2">
-                {['today', 'week', 'month'].map(period => (
-                  <button
-                    key={period}
-                    onClick={() => setSelectedPeriod(period)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedPeriod === period
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-white/10 text-purple-200 hover:bg-white/20'
-                    }`}
-                  >
+        {/* Period Selector */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Sales Overview</Text>
+            <View style={styles.periodSelector}>
+              {['today', 'week', 'month'].map(period => (
+                <TouchableOpacity
+                  key={period}
+                  onPress={() => setSelectedPeriod(period)}
+                  style={[
+                    styles.periodButton,
+                    selectedPeriod === period && styles.periodButtonActive
+                  ]}
+                >
+                  <Text style={[
+                    styles.periodButtonText,
+                    selectedPeriod === period && styles.periodButtonTextActive
+                  ]}>
                     {period.charAt(0).toUpperCase() + period.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="time" stroke="#fff" />
-                <YAxis stroke="#fff" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: 'none', 
-                    borderRadius: '8px',
-                    color: '#fff'
-                  }} 
-                />
-                <Line type="monotone" dataKey="sales" stroke="#f97316" strokeWidth={3} dot={{ fill: '#f97316', r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Top Products */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-xl">
-            <h2 className="text-xl font-bold text-white mb-4">Top Products</h2>
-            <div className="space-y-4">
-              {topProducts.map((product, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white ${
-                      index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-600' : 'bg-purple-500'
-                    }`}>
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="text-white font-medium text-sm">{product.name}</p>
-                      <p className="text-purple-200 text-xs">{product.sales} orders</p>
-                    </div>
-                  </div>
-                  <p className="text-white font-bold">₹{product.revenue}</p>
-                </div>
+                  </Text>
+                </TouchableOpacity>
               ))}
-            </div>
-          </div>
-        </div>
+            </View>
+          </View>
 
-        {/* Recent Orders & Alerts */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Orders */}
-          <div className="lg:col-span-2 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-xl">
-            <h2 className="text-xl font-bold text-white mb-4">Recent Orders</h2>
-            <div className="space-y-3">
-              {recentOrders.map((order, index) => (
-                <div key={index} className="bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
-                        <ShoppingCart className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-white font-semibold">{order.id}</p>
-                        <p className="text-purple-200 text-sm">{order.customer}</p>
-                      </div>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                      {order.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-purple-200">{order.items} items • {order.time}</span>
-                    <span className="text-white font-bold">₹{order.amount}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Sales Chart Placeholder */}
+          <View style={styles.chartContainer}>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 60 }]} />
+              <Text style={styles.barLabel}>9AM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 90 }]} />
+              <Text style={styles.barLabel}>10AM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 120 }]} />
+              <Text style={styles.barLabel}>11AM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 180 }]} />
+              <Text style={styles.barLabel}>12PM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 160 }]} />
+              <Text style={styles.barLabel}>1PM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 110 }]} />
+              <Text style={styles.barLabel}>2PM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 70 }]} />
+              <Text style={styles.barLabel}>3PM</Text>
+            </View>
+            <View style={styles.chartBar}>
+              <View style={[styles.bar, { height: 50 }]} />
+              <Text style={styles.barLabel}>4PM</Text>
+            </View>
+          </View>
+        </View>
 
-          {/* Quick Actions & Alerts */}
-          <div className="space-y-4">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-xl">
-              <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
-              <div className="space-y-3">
-                <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
-                  + New Order
-                </button>
-                <button className="w-full bg-white/20 text-white py-3 rounded-xl font-semibold hover:bg-white/30 transition-all">
-                  View Menu
-                </button>
-                <button className="w-full bg-white/20 text-white py-3 rounded-xl font-semibold hover:bg-white/30 transition-all">
-                  Inventory
-                </button>
-              </div>
-            </div>
+        {/* Top Products */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Top Products</Text>
+          {topProducts.map((product, index) => (
+            <View key={index} style={styles.productItem}>
+              <View style={styles.productLeft}>
+                <View style={[styles.rankBadge, { backgroundColor: getRankColor(index) }]}>
+                  <Text style={styles.rankText}>{index + 1}</Text>
+                </View>
+                <View>
+                  <Text style={styles.productName}>{product.name}</Text>
+                  <Text style={styles.productSales}>{product.sales} orders</Text>
+                </View>
+              </View>
+              <Text style={styles.productRevenue}>₹{product.revenue}</Text>
+            </View>
+          ))}
+        </View>
 
-            <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 backdrop-blur-md rounded-2xl p-6 border border-red-500/30 shadow-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <AlertCircle className="w-5 h-5 text-red-300" />
-                <h3 className="text-lg font-bold text-white">Alerts</h3>
-              </div>
-              <div className="space-y-2">
-                <p className="text-red-200 text-sm">⚠️ {stats.lowStockItems} items low in stock</p>
-                <p className="text-orange-200 text-sm">🕐 {stats.activeOrders} orders pending</p>
-                <p className="text-yellow-200 text-sm">⭐ Peak hours approaching</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        {/* Recent Orders */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Recent Orders</Text>
+          {recentOrders.map((order, index) => (
+            <View key={index} style={styles.orderItem}>
+              <View style={styles.orderHeader}>
+                <View style={styles.orderLeft}>
+                  <View style={styles.orderIcon}>
+                    <Text style={styles.orderIconText}>🛒</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.orderId}>{order.id}</Text>
+                    <Text style={styles.orderCustomer}>{order.customer}</Text>
+                  </View>
+                </View>
+                <View style={getStatusStyle(order.status)}>
+                  <Text style={styles.statusText}>{order.status}</Text>
+                </View>
+              </View>
+              <View style={styles.orderFooter}>
+                <Text style={styles.orderDetails}>{order.items} items • {order.time}</Text>
+                <Text style={styles.orderAmount}>₹{order.amount}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        {/* Quick Actions */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <TouchableOpacity style={styles.primaryButton}>
+            <Text style={styles.primaryButtonText}>+ New Order</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.secondaryButton}>
+            <Text style={styles.secondaryButtonText}>View Menu</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.secondaryButton}>
+            <Text style={styles.secondaryButtonText}>Inventory</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Alerts */}
+        <View style={[styles.section, styles.alertsSection]}>
+          <View style={styles.alertsHeader}>
+            <Text style={styles.alertIcon}>⚠️</Text>
+            <Text style={styles.alertsTitle}>Alerts</Text>
+          </View>
+          <Text style={styles.alertText}>⚠️ {stats.lowStockItems} items low in stock</Text>
+          <Text style={styles.alertText}>🕐 {stats.activeOrders} orders pending</Text>
+          <Text style={styles.alertText}>⭐ Peak hours approaching</Text>
+        </View>
+
+        <View style={styles.bottomPadding} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#581C87',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  logo: {
+    width: 48,
+    height: 48,
+    backgroundColor: '#F97316',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoText: {
+    fontSize: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  subtitle: {
+    fontSize: 12,
+    color: '#E9D5FF',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  timeContainer: {
+    alignItems: 'flex-end',
+  },
+  timeText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  dateText: {
+    fontSize: 11,
+    color: '#E9D5FF',
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#A855F7',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    gap: 12,
+  },
+  statCard: {
+    width: (width - 44) / 2,
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  statCardOrange: {
+    backgroundColor: '#F97316',
+  },
+  statCardGreen: {
+    backgroundColor: '#22C55E',
+  },
+  statCardBlue: {
+    backgroundColor: '#3B82F6',
+  },
+  statCardPurple: {
+    backgroundColor: '#A855F7',
+  },
+  statHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  statIcon: {
+    width: 36,
+    height: 36,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statIconText: {
+    fontSize: 20,
+  },
+  statTrend: {
+    fontSize: 16,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.9)',
+    fontWeight: '500',
+  },
+  statValue: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginTop: 4,
+  },
+  statChange: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 8,
+  },
+  section: {
+    paddingHorizontal: 20,
+    paddingTop: 24,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 16,
+  },
+  periodSelector: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  periodButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  periodButtonActive: {
+    backgroundColor: '#F97316',
+  },
+  periodButtonText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#E9D5FF',
+  },
+  periodButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  chartContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    height: 200,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 8,
+  },
+  chartBar: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  bar: {
+    width: 20,
+    backgroundColor: '#F97316',
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  barLabel: {
+    fontSize: 9,
+    color: '#E9D5FF',
+  },
+  productItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 8,
+  },
+  productLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  rankBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rankText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  productName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  productSales: {
+    fontSize: 11,
+    color: '#E9D5FF',
+  },
+  productRevenue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  orderItem: {
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  orderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  orderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  orderIcon: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#F97316',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  orderIconText: {
+    fontSize: 18,
+  },
+  orderId: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  orderCustomer: {
+    fontSize: 12,
+    color: '#E9D5FF',
+  },
+  statusPreparing: {
+    backgroundColor: '#FEF3C7',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusReady: {
+    backgroundColor: '#DBEAFE',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusCompleted: {
+    backgroundColor: '#D1FAE5',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusDefault: {
+    backgroundColor: '#E5E7EB',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  orderFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  orderDetails: {
+    fontSize: 12,
+    color: '#E9D5FF',
+  },
+  orderAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  primaryButton: {
+    backgroundColor: '#F97316',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  primaryButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  secondaryButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  secondaryButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  alertsSection: {
+    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 20,
+    marginTop: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+  },
+  alertsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  alertIcon: {
+    fontSize: 20,
+  },
+  alertsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  alertText: {
+    fontSize: 13,
+    color: '#FCA5A5',
+    marginBottom: 6,
+  },
+  bottomPadding: {
+    height: 40,
+  },
+});

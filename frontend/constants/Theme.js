@@ -8,9 +8,6 @@ export const COLORS = {
   gray: "#777",
   lightGray: "#969696ff",
 
-  gradient1: ['#0E0E10','#3D8BFF', '#0E0E10'],
-  gradient2: ['#0E0E10','#3D8BFF', '#B83AFF', '#0E0E10'],
-
 };
 
 export const SIZE = {
